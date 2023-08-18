@@ -19,7 +19,7 @@ loop:
     lw t4, 0(t0)        # Load the current element of array A into t4
     lw t5, 44(t1)       # Load the corresponding element of array B into t5 (offset 44 because each element is 4 bytes)
 
-    add t6, t4, t5      # Calculate the sum of A[i] + B[i]
+    add t6, t4, t5      # Calculate the sum of A[i] + B[N-i-1]
     sw t6, 0(t2)        # Store the result in array C
 
     j next_iteration     # Jump to next_iteration

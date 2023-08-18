@@ -14,10 +14,8 @@ main:
     lw t2, f1            # Load the value of the second Fibonacci number into t2
     
     sw t1, 0(t0)         # Store the first Fibonacci number in the array
-    add t3, t1, x0       # Prepare for printing the first Fibonacci number
     addi t4, t4, -1      # Decrement the loop counter
     sw t2, 0(t0)         # Store the second Fibonacci number in the array
-    add t3, t2, x0       # Prepare for printing the second Fibonacci number
     addi t4, t4, -1      # Decrement the loop counter
     
 loop:
