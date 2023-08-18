@@ -1,47 +1,38 @@
 .data
-N:        .word        12           # Number of elements in array A
-A:        .word        0, 1, 2, 7, -8, 4, 5, 12, 11, -2, 6, 3   # Array A
-B:        .word        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0       # Array B to store even positive numbers
-newline:  .string      "\n"          # Newline string for printing
+n:             .word        12       # Number of Fibonacci numbers to generate
+f0:            .word         0       # First Fibonacci number
+f1:            .word         1       # Second Fibonacci number
+array:         .word         0       # Array to store Fibonacci numbers
 
 .text
 .globl main
 
 main:
-    li a2, 2            # Load the divisor (2) for checking even numbers
-    la t0, A            # Load address of array A into t0
-    la t1, B            # Load address of array B into t1
-    lw t2, N            # Load the number of elements into t2
-
+    la t0, array         # Load address of the array into t0
+    lw t4, n             # Load the value of n into t4
+    lw t1, f0            # Load the value of the first Fibonacci number into t1
+    lw t2, f1            # Load the value of the second Fibonacci number into t2
+    
+    sw t1, 0(t0)         # Store the first Fibonacci number in the array
+    add t3, t1, x0       # Prepare for printing the first Fibonacci number
+    addi t4, t4, -1      # Decrement the loop counter
+    sw t2, 0(t0)         # Store the second Fibonacci number in the array
+    add t3, t2, x0       # Prepare for printing the second Fibonacci number
+    addi t4, t4, -1      # Decrement the loop counter
+    
 loop:
-    lw t3, 0(t0)        # Load the current element of A into t3
-    bgtz t3, check_positive  # Branch to check_positive if t3 > 0
+    add t3, t2, t1       # Calculate the next Fibonacci number
+    add t1, t2, x0       # Shift t1 to the next Fibonacci number
+    add t2, t3, x0       # Shift t2 to the next Fibonacci number
+    sw t3, 0(t0)         # Store the calculated Fibonacci number in the array
+    addi t0, t0, 4       # Move to the next position in the array
+    addi t4, t4, -1      # Decrement the loop counter
 
-next_iteration:
-    addi t2, t2, -1     # Decrement the loop counter
-    addi t0, t0, 4      # Move to the next element in A
-    bnez t2, loop       # Branch to loop if t2 != 0
-    j end               # Jump to the end
-
-check_positive:
-    rem t4, t3, a2      # Calculate the remainder of t3 divided by 2
-    bnez t4, next_iteration  # If remainder is not zero, skip to next iteration
-    
-    add a0, a0, t3      # Add the even positive number to a0 (for printing)
-    li a7, 1            # System call number for printing an integer
-    ecall               # Make the system call to print
-    
-    la a0, newline      # Load the newline string for printing
-    li a7, 4            # System call number for printing a string
-    ecall               # Make the system call to print
-    
-    li a0, 0            # Reset a0 for further iterations
-    
-    sw t3, 0(t1)         # Store the even positive number into array B
-    addi t1, t1, 4      # Move to the next position in B
-    j next_iteration     # Continue with the next iteration
-
+    bnez t4, loop        # Branch to loop if t4 != 0
+    j end                # Jump to the end
+   
 end:
-    j end               # Jump to the end
+    ret                  # Return from the main function
+
 
 
